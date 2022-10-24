@@ -72,6 +72,15 @@ export const SlotForm = () => {
         }
     }
 
+    const getDisabledStatus = () => {
+        return (
+            (quantityAvailable < (+formData.quantityUnits)) || 
+            (+formData.quantityUnits) === 0 || 
+            (+formData.quantityUnits) < 0 ||
+            isLoading
+        )
+    }
+
     return (
         <>
             <div className="m-4 mt-5 d-flex place-center rounded-0">
@@ -256,7 +265,7 @@ export const SlotForm = () => {
                                     <div className='submit-text mt-3 mb-3'>
                                         {submitError}
                                     </div>
-                                    <button disabled = {(quantityAvailable < formData.quantityUnits) || isLoading} type='submit' className="btn submit-button m-5 p-3">{isLoading ? 'Please wait ...' : 'Submit'}</button>
+                                    <button disabled = {getDisabledStatus()} type='submit' className="btn submit-button m-5 p-3">{isLoading ? 'Please wait ...' : 'Submit'}</button>
                                 </div>
 
                             </div>
