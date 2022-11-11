@@ -134,3 +134,7 @@ input[type="radio"] {
   color: red;
   margin-left: 3px;
 }
+
+.survey-link{
+  color: white;
+}

@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useState } from 'react'
 import { _checkForSlot, _submitInboundSlotForm } from '../api';
 import { useNavigate } from "react-router-dom";
+import { wareHouseTiming } from '../api/constants';
 
 export const SlotForm = () => {
 	let navigate = useNavigate();	
@@ -81,6 +82,32 @@ export const SlotForm = () => {
         )
     }
 
+    const getTimeData = () => {
+        if(formData && formData.wareHouseCity) {
+            const city = formData.wareHouseCity.split('_')[0];
+            let {start , end} = wareHouseTiming[city];
+            let timeData = [];
+            let timeValue = 'am';
+            while(true) {
+
+                timeData.push(`${start}${timeValue} - ${start+1}${(start === 11 && timeValue === 'am') ? 'pm' : timeValue}`);
+                start++;
+                if(start === 12) {
+                    start = 0;
+                    timeValue = 'pm'                
+                    timeData.push(`12pm - ${start+1}pm`);
+                    start++;
+                }
+
+                if(start === end) {
+                    break;
+                }
+            }
+            return timeData;
+        }
+        return [];
+    }
+
     return (
         <>
             <div className="m-4 mt-5 d-flex place-center rounded-0">
@@ -88,6 +115,7 @@ export const SlotForm = () => {
                     <div className="card-header text-center">
                         <h1 className="main-heading mt-3">Inbounding Slot Booking by KAMs</h1>
                         <p className="header-sub-text px-2">Please enter following details, after checking available slot in Appointment Booking Sheet of respective month</p>
+                        <a href="https://docs.google.com/spreadsheets/d/1aqTbhGy6F5rTJpqgJA4a2gqLWAfR_PehhMn0HrexQ9w/edit?usp=sharing" className="survey-link">View survey sheet</a>
                     </div>
                     <div className="card-body p-4">
                         <form onSubmit={submitForm}>
@@ -158,74 +186,67 @@ export const SlotForm = () => {
                                     </div>
                                 </div>
 
-                                <div className="form-group mt-5">
-                                    <div>
-                                        <label htmlFor="uname1 d-block">Warehouse Type?</label>
-                                    </div>
-                                    <div className="mt-2">
-                                        <div className="form-check form-check-inline ">
-                                            <input onChange={(e) => {onInputChange(e)}} className="form-check-input " type="radio" name="wareHouseType" id="NON_BULKY" value="NON_BULKY" />
-                                            <label className="form-check-label" htmlFor="NON_BULKY">Non Bulky</label>
-                                        </div>
-                                        <div className="form-check form-check-inline margin-box">
-                                            <input onChange={(e) => {onInputChange(e)}} className="form-check-input " type="radio" name="wareHouseType" id="SEMI_BULKY" value="SEMI_BULKY" />
-                                            <label className="form-check-label" htmlFor="SEMI_BULKY">Semi Bulky</label>
-                                        </div>
-                                        <div className="form-check form-check-inline margin-box">
-                                            <input onChange={(e) => {onInputChange(e)}} className="form-check-input " type="radio" name="wareHouseType" id="BULKY" value="BULKY" />
-                                            <label className="form-check-label" htmlFor="BULKY">Bulky</label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {formData.wareHouseType &&
+                                {formData.wareHouseCity && 
                                     <div className="form-group mt-5">
                                         <div>
-                                            <label htmlFor="uname1 d-block">Time Slot?</label>
+                                            <label htmlFor="uname1 d-block">Warehouse Type?</label>
                                         </div>
                                         <div className="mt-2">
-                                            <select name='timeSlot' onChange={(e) => {onInputChange(e)}} className="form-dropdown form-control dropdown" data-component="dropdown">
-                                                <option value=""> Please Select </option>
-                                                <option value="9am - 10am"> 9am - 10am </option>
-                                                <option value="10am - 11am"> 10am - 11am </option>
-                                                <option value="11am - 12pm"> 11am - 12pm </option>
-                                                <option value="12pm - 1pm"> 12pm - 1pm </option>
-                                                <option value="1pm - 2pm"> 1pm - 2pm </option>
-                                                <option value="2pm - 3pm"> 2pm - 3pm </option>
-                                                <option value="3pm - 4pm"> 3pm - 4pm </option>
-                                                <option value="4pm - 5pm"> 4pm - 5pm </option>
-                                                <option value="5pm - 6pm"> 5pm - 6pm </option>
-                                                <option value="6pm - 7pm"> 6pm - 7pm </option>
-                                                <option value="7pm - 8pm"> 7pm - 8pm </option>
-                                                <option value="8pm - 9pm"> 8pm - 9pm </option>
-                                                <option value="9pm - 10pm"> 9pm - 10pm </option>
-                                                <option value="10pm - 11pm"> 10pm - 11pm </option>
-                                                <option value="11pm - 12am"> 11pm - 12am </option>
-                                            </select>
+                                            <div className="form-check form-check-inline ">
+                                                <input onChange={(e) => {onInputChange(e)}} className="form-check-input " type="radio" name="wareHouseType" id="NON_BULKY" value="NON_BULKY" />
+                                                <label className="form-check-label" htmlFor="NON_BULKY">Non Bulky</label>
+                                            </div>
+                                            <div className="form-check form-check-inline margin-box">
+                                                <input onChange={(e) => {onInputChange(e)}} className="form-check-input " type="radio" name="wareHouseType" id="SEMI_BULKY" value="SEMI_BULKY" />
+                                                <label className="form-check-label" htmlFor="SEMI_BULKY">Semi Bulky</label>
+                                            </div>
+                                            <div className="form-check form-check-inline margin-box">
+                                                <input onChange={(e) => {onInputChange(e)}} className="form-check-input " type="radio" name="wareHouseType" id="BULKY" value="BULKY" />
+                                                <label className="form-check-label" htmlFor="BULKY">Bulky</label>
+                                            </div>
                                         </div>
                                     </div>
                                 }
 
-                                {formData.timeSlot &&
-                                    <div className="row mt-5">
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label htmlFor="uname1">Date of Inbounding?</label>
-                                                <input className="form-control" value={formData.dateInboundings} onChange={(e) => {onInputChange(e)}} name="dateInboundings" required type="date" />
-                                            </div>
+
+                            {formData.wareHouseType &&
+                                <div className="row mt-5">
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label htmlFor="uname1">Date of Inbounding?</label>
+                                            <input className="form-control" value={formData.dateInboundings} onChange={(e) => {onInputChange(e)}} name="dateInboundings" required type="date" />
                                         </div>
-                                        {formData.dateInboundings &&
-                                            <div className="col-md-6">
-                                                <div className="form-group">
-                                                    <label htmlFor="uname1">Quantity / Units?</label>
-                                                    <input onChange={onInputChange} onBlur={onQuantityChange} className="form-control" value={formData.quantityUnits} name="quantityUnits" required type="number" />
-                                                    <span className="quantity-text mt-3">{quantityAvailable} remaining {quantityAvailable === 0 ? '- Please select another slot' : ''}</span>
-                                                    {message && 
-                                                        <p className="message-text mt-3">{message}</p>
-                                                    }
-                                                </div>
-                                            </div>
-                                        }
+                                    </div>
+                                </div>
+                            }
+
+                            {formData.dateInboundings &&
+                                <div className="form-group mt-5">
+                                    <div>
+                                        <label htmlFor="uname1 d-block">Time Slot?</label>
+                                    </div>
+                                    <div className="mt-2">
+                                        <select name='timeSlot' onChange={(e) => {onInputChange(e)}} className="form-dropdown form-control dropdown" data-component="dropdown">
+                                            <option value=""> Please Select </option>
+                                            {getTimeData().map(time => 
+                                                <option value={time}> {time} </option>
+                                            )}
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+
+
+                            {formData.timeSlot &&
+                                <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label htmlFor="uname1">Quantity / Units?</label>
+                                            <input onChange={onInputChange} onBlur={onQuantityChange} className="form-control" value={formData.quantityUnits} name="quantityUnits" required type="number" />
+                                            <span className="quantity-text mt-3">{quantityAvailable} remaining {quantityAvailable === 0 ? '- Please select another slot' : ''}</span>
+                                            {message && 
+                                                <p className="message-text mt-3">{message}</p>
+                                            }
+                                        </div>
                                     </div>
                                 }
 
@@ -234,11 +255,11 @@ export const SlotForm = () => {
                                         <div className="form-group">
                                             <label htmlFor="uname1">Delivery Type?</label>
                                             <div className="form-check form-check mt-2">
-                                                <input onChange={onInputChange} className="form-check-input " type="radio" name="deliveryType" id="pickup" value="pickup" />
+                                                <input required onChange={onInputChange} className="form-check-input " type="radio" name="deliveryType" id="pickup" value="pickup" />
                                                 <label className="form-check-label" htmlFor="pickup">Pick up</label>
                                             </div>
                                             <div className="form-check form-check mt-2">
-                                                <input onChange={onInputChange} className="form-check-input " type="radio" name="deliveryType" id="dropOff" value="dropOff" />
+                                                <input required onChange={onInputChange} className="form-check-input " type="radio" name="deliveryType" id="dropOff" value="dropOff" />
                                                 <label className="form-check-label" htmlFor="dropOff">Drop off</label>
                                             </div>
                                         </div>
@@ -250,7 +271,7 @@ export const SlotForm = () => {
                                         <label htmlFor="uname1 d-block">Industry?</label>
                                     </div>
                                     <div className="mt-2">
-                                        <select onChange={onInputChange} name="industry" className="form-dropdown form-control dropdown" data-component="dropdown">
+                                        <select required onChange={onInputChange} name="industry" className="form-dropdown form-control dropdown" data-component="dropdown">
                                             <option value=""> Please Select </option>
                                             <option value="FMCG "> FMCG </option>
                                             <option value="Fashion "> Fashion </option>
