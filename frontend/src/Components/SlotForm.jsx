@@ -152,7 +152,7 @@ export const SlotForm = () => {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <label htmlFor="uname1">IO / PO Number?</label>
-                                            <input onChange={onInputChange} className="form-control" value={formData.IO_PO_number} name="IO_PO_number" required type="email" />
+                                            <input onChange={onInputChange} className="form-control" value={formData.IO_PO_number} name="IO_PO_number" required type="text" />
                                         </div>
                                     </div>
                                     <div className="col-md-6">
