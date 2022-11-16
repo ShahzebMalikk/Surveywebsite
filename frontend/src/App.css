@@ -138,3 +138,18 @@ input[type="radio"] {
 .survey-link{
   color: white;
 }
+
+.main-wrapper{
+  background: rgb(255, 255, 255);
+  margin: 160px 350px 0 350px;
+  padding: 1px 10px 50px 10px;
+  border: 20px solid cadetblue;
+  border-radius: 25px;
+}
+
+.logout-button{
+  border: none;
+  padding: 4px 20px 4px 20px;
+  border-radius: 6px;
+  float: right;
+}

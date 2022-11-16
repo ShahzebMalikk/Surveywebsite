@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors'
 import slotRouter from './routes/slot-booking.js';
+import authRouter from './routes/auth.js';
 import fs from 'fs';
 import 'dotenv/config';
 import mongoose from 'mongoose';
@@ -33,12 +34,13 @@ mongoose.connect(process.env.DB_URL, options).then(()=>{
 });
 
 app.use('/slot-booking', slotRouter);
+app.use('/slot-booking/auth', authRouter);
 
 const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
 	console.log('Server is up and running on PORT number ' + port);
-	doc = _initGoogleSheet();
+	// doc = _initGoogleSheet();
 });
 
 const _initGoogleSheet = async() => {

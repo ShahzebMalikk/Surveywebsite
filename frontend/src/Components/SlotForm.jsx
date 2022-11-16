@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { _checkForSlot, _submitInboundSlotForm } from '../api';
 import { useNavigate } from "react-router-dom";
 import { wareHouseTiming } from '../api/constants';
+import { isLoggedIn,logout } from '../util/helpers';
 
 export const SlotForm = () => {
 	let navigate = useNavigate();	
@@ -27,6 +28,12 @@ export const SlotForm = () => {
     const [message , setMessage] = useState('');
     const [submitError , setSubmitError] = useState('');
     const [isLoading , setLoading] = useState(false);
+
+    useEffect(()=>{
+        if(!isLoggedIn()) {
+            navigate('/signin');
+        }
+    },[]);
 
     useEffect(()=> {checkForQuantityAvailable()} , [formData.dateInboundings , formData.wareHouseType, formData.wareHouseCity] );
 
@@ -108,11 +115,17 @@ export const SlotForm = () => {
         return [];
     }
 
+    const logoutUser = () => {
+        logout();
+        navigate('/signin');
+    }
+
     return (
         <>
             <div className="m-4 mt-5 d-flex place-center rounded-0">
                 <div className="card rounded-0">
                     <div className="card-header text-center">
+                        <button className='logout-button' onClick={()=>logoutUser()}>Logout</button>
                         <h1 className="main-heading mt-3">Inbounding Slot Booking by KAMs</h1>
                         <p className="header-sub-text px-2">Please enter following details, after checking available slot in Appointment Booking Sheet of respective month</p>
                         <a href="https://docs.google.com/spreadsheets/d/1aqTbhGy6F5rTJpqgJA4a2gqLWAfR_PehhMn0HrexQ9w/edit?usp=sharing" className="survey-link">View survey sheet</a>
